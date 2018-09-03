@@ -7,6 +7,8 @@ use Rota\Models\Person;
 use Rota\Models\Item;
 use Rota\Models\Week;
 use Rota\Models\Day;
+use Rota\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class ShowController extends Controller
 {
@@ -77,6 +79,51 @@ class ShowController extends Controller
             'noweeks' => $noweeks,
             'weeknumber' => $request->weekno 
         ]);
-
     }
+
+    public function myRota($id, Request $request, Person $person, Item $item, Week $week, Day $day)
+    {
+        // Get persons id of user
+        $person_id = $person::where('user_id', Auth::user()->id)->get()->first();
+
+        // Get items form week for auth id
+     
+        $items = $item::where('persons_id', $person_id->id)->where('weeks_id', $id)->get();
+
+        // Get number of weeks in year (possible 53 weeks in leap year)
+        $noweeks = $week::where('year', date('Y'))->get();
+       
+        return view('myrota')->with([
+            'items' => $items,
+            'prev' => $id - 1,
+            'next' => $id +1,
+            'noweeks' => $noweeks,
+            'weeknumber' => $id 
+        ]);
+    }
+
+    public function submitRotaForm(Request $request, Person $person, Item $item, Week $week, Day $day)
+    {
+        // Get persons id of user
+        $person_id = $person::where('user_id', Auth::user()->id)->get()->first();
+
+        // Get items form week for auth id
+     
+        $items = $item::where('persons_id', $person_id->id)->where('weeks_id', $request->weekno)->get();
+
+        // Get number of weeks in year (possible 53 weeks in leap year)
+        $noweeks = $week::where('year', date('Y'))->get();
+       
+        return view('myrota')->with([
+            'items' => $items,
+            'prev' => $request->weekno - 1,
+            'next' => $request->weekno +1,
+            'noweeks' => $noweeks,
+            'weeknumber' => $request->weekno 
+        ]);
+
+        
+    }
+
+
 }

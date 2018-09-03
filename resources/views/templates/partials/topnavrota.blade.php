@@ -1,12 +1,12 @@
 <div class="daybox col-sm-12">
 	<div class="navdiv">
 		<div class="leftarrow">
-			<a href="{{ url('show/' . $prev) }}"><span  class="fas fa-caret-left"></span> Prev</a>
+			<a href="{{ url('myrota/' . $prev) }}"><span  class="fas fa-caret-left"></span> Prev</a>
 		</div>
 
 		<div class="centerdropdown">
 			<span>
-				<form action="{!! url('showform'); !!}" method="post" name="weeksub" id="weeksub">
+				<form action="{!! url('showrotaform'); !!}" method="post" name="weeksub" id="weeksub">
 					<label for="weekno">Week no: </label>
 					<select name="weekno" id="weekno" onchange="document.getElementById('weeksub').submit();">
 						@foreach ($noweeks as $wekno)
@@ -21,11 +21,11 @@
 		</div>
 
 		<div class="rightarrow">
-			<a href="{{ url('show/' . $next) }}">Next <span class="fas fa-caret-right"></span></a>
+			<a href="{{ url('myrota/' . $next) }}">Next <span class="fas fa-caret-right"></span></a>
 		</div>
 	</div>
 	<div class="navdiv">
-		<input type="radio" name="rota" aria-label="My rota" onclick="window.location.href='{!! url('myrota/' . $weeknumber); !!}'"> My rota
-		<input type="radio" name="rota" aria-label="Weekly rota" onclick="window.location.href='{!! url('show/' . $weeknumber); !!}'" checked="checked"> Weekly rota
+		<input type="radio" name="rota" aria-label="My rota" onclick="window.location.href='{!! url('myrota/' . $weeknumber); !!}'" checked="checked"> My rota
+		<input type="radio" name="rota" aria-label="Weekly rota" onclick="window.location.href='{!! url('show/' . $weeknumber); !!}'"> Weekly rota
 	</div>
 </div>

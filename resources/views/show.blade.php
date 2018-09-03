@@ -15,8 +15,8 @@
 								<div class="arow">{{ $tm->roles->role }}</div>
 								<div class="brow">{{ $tm->persons->first_name }} <span class="mobile">{{ $tm->persons->last_name }}</span></div>
 								{{-- <div class="arow">{{ $tm->persons->last_name }}</div> --}}
-								<div class="arow">{{ \Carbon\Carbon::parse($tm->start_time)->format('h:s') }}</div>
-								<div class="arow">{{ \Carbon\Carbon::parse($tm->finish_time)->format('h:s') }}</div>
+								<div class="arow">{{ \Carbon\Carbon::parse($tm->start_time)->format('H:s') }}</div>
+								<div class="arow">{{ \Carbon\Carbon::parse($tm->finish_time)->format('H:s') }}</div>
 							</div>
 						@endforeach
 					@endforeach

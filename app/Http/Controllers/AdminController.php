@@ -3,6 +3,9 @@
 namespace Rota\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Rota\Models\User;
+use Illuminate\Support\Facades\Auth;
+Use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
@@ -29,5 +32,15 @@ class AdminController extends Controller
 
 
         
+    }
+
+
+    public function makeUser(User $user)
+    {
+        $makeuser = $user::where('id', Auth::user()->id)->get()->first();
+        $makeuser->name = 'Kellen Koep';
+        $makeuser->password = Hash::make('password');
+        $makeuser->email = 'kellen.kope@emai.com';
+        $makeuser->save();
     }
 }

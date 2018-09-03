@@ -21,6 +21,10 @@ class ChangeController extends Controller
     {
         dd($id);
 
+        // Get item details
+        // $itemdetails = $item::where('id', $id)->get()->first();
+
+        // Get persons available for this item
         
      //    return view('test')->with([
     	// 	'items' => $itemarray,

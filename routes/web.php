@@ -23,9 +23,11 @@ Route::get('/admin/week/{date}', 'WeekController@index')->name('week');
 
 // Show routes
 Route::get('/show/{wkno}', 'ShowController@index')->name('show');
+Route::get('/myrota/{wkno}', 'ShowController@myRota')->name('myrota');
 Route::get('/change/{id}', 'ChangeController@index')->name('change');
 Route::get('/showmonth/{id}', 'ShowController@month')->name('month');
 Route::post('/showform', 'ShowController@submitForm')->name('form');
+Route::post('/showrotaform', 'ShowController@submitRotaForm')->name('rotaform');
 Route::get('/weekadmin', 'AdminController@index')->name('admin');
 
 
@@ -165,19 +167,33 @@ Route::get('/seeddaysweek', function(\Rota\Models\Week $week, \Rota\Models\Day $
 	foreach ($weeks as $val) {
 		echo $val->start_date;
 		$day->where('date', '>=', $val->start_date)->where('date', '<=', $val->end_date)->update(['weeks_id' => $val->id]);
-	}
-
-	 
+	}	 
 });
 
+Route::get('/seedpersonsuserid', function(\Rota\Models\Person $person){
+	$persons = $person->get();
+
+	$x = 1;
+	foreach ($persons as $val) 
+	{
+		$val->update(['user_id' => $x]);
+		$x++;
+	}	 
+});
+
+Route::get('/seeduser', 'AdminController@makeUser')->name('makeuser');
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home', 'AdminController@index')->name('home');
 
 Route::get('/{a}/{b?}/{c?}/{d?}/{e?}', function($a, $b = null, $c = null, $d = null, $e = null){
 	echo $a . " / " . $b . " / " . $c . " / " . $d . " / " . $e;
 });
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

@@ -20,7 +20,8 @@ class Person extends Model
     	'address',
     	'email',
     	'level_id',
-    	'notes'
+    	'notes',
+        'user_id'
     ];
     
     public function items()
