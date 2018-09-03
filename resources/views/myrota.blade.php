@@ -13,7 +13,7 @@
 					@if($myVar != $item->days->date)			
 						<div class="hrow">{{ \Carbon\Carbon::parse($item->days->date)->format('l d F Y') }}</div>
 					@endif	
-							<div class="weekrow" onclick="window.location='{!! url('change/' . $item->id); !!}'">				
+							<div class="weekrow link" onclick="window.location='{!! url('change/' . $item->id); !!}'">				
 								<div class="arow">{{ $item->roles->role }}</div>
 								<div class="brow">{{ $item->persons->first_name }} <span class="mobile">{{ $item->persons->last_name }}</span></div>
 								{{-- <div class="arow">{{ $item->persons->last_name }}</div> --}}
