@@ -34,6 +34,7 @@ Route::get('/show/this/week', 'ShowController@thisWeek')->name('thisweek');
 Route::get('/myrota/{wkno}', 'ShowController@myRota')->name('myrota');
 Route::get('/change/{item}', 'ChangeController@index')->name('change');  
 Route::post('/changerequest', 'ChangeController@request')->name('request');
+Route::post('/change/request/form', 'ChangeController@requestForm')->name('requestform');
 Route::get('/showmonth/{id}', 'ShowController@month')->name('month');
 Route::post('/showform', 'ShowController@submitForm')->name('form');
 Route::post('/showrotaform', 'ShowController@submitRotaForm')->name('rotaform');
