@@ -10,6 +10,13 @@ Route::get('/', function () {
 
 Auth::routes();
 
+// Change password
+Route::get('/changepasswordshow','HomeController@showChangePasswordForm')->name('changepasspage');
+Route::post('/changepasswordshow','HomeController@showChangePasswordForm')->name('changepasspage');
+Route::post('/changepassword','HomeController@changePassword')->name('changepassword');
+
+
+
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/testcal', 'TestCalController@testcal')->name('testcal');
@@ -23,8 +30,10 @@ Route::get('/admin/week/{date}', 'WeekController@index')->name('week');
 
 // Show routes
 Route::get('/show/{wkno}', 'ShowController@index')->name('show');
+Route::get('/show/this/week', 'ShowController@thisWeek')->name('thisweek');
 Route::get('/myrota/{wkno}', 'ShowController@myRota')->name('myrota');
-Route::get('/change/{id}', 'ChangeController@index')->name('change');
+Route::get('/change/{item}', 'ChangeController@index')->name('change');  
+Route::post('/changerequest', 'ChangeController@request')->name('request');
 Route::get('/showmonth/{id}', 'ShowController@month')->name('month');
 Route::post('/showform', 'ShowController@submitForm')->name('form');
 Route::post('/showrotaform', 'ShowController@submitRotaForm')->name('rotaform');

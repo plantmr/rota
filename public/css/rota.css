@@ -1,3 +1,8 @@
+html {
+    overflow: -moz-scrollbars-vertical; 
+    overflow-y: scroll;
+}
+
 body {
 	background-color: #fff;
 }
@@ -48,7 +53,7 @@ body {
 	width: 20%;
 	float: left;
 	margin: 0 10px;
-	text-align: left: ;;
+	text-align: left;
 }
 
 .centerdropdown {
@@ -74,3 +79,66 @@ a:link, a:visited {
         display: none;
     }
 }
+
+.navdiv {
+	text-align: center;
+	clear: both;
+}
+
+.link {
+	cursor: pointer;
+}
+
+/*#personlist {
+	display: none;
+}*/
+
+#starttime {
+	display: none;
+}
+
+#endtime {
+	display: none;
+}
+
+.full-height {
+                height: 100vh;
+            }
+
+            .flex-center {
+                align-items: center;
+                display: flex;
+                justify-content: center;
+            }
+
+            .position-ref {
+                position: relative;
+            }
+
+            .top-right {
+                position: absolute;
+                right: 10px;
+                top: 18px;
+            }
+
+            .content {
+                text-align: center;
+            }
+
+            .title {
+                font-size: 84px;
+            }
+
+            .links > a {
+                color: #636b6f;
+                padding: 0 25px;
+                font-size: 12px;
+                font-weight: 600;
+                letter-spacing: .1rem;
+                text-decoration: none;
+                text-transform: uppercase;
+            }
+
+            .m-b-md {
+                margin-bottom: 30px;
+            }

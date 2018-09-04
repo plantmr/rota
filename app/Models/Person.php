@@ -29,9 +29,9 @@ class Person extends Model
         return $this->hasMany(Item::class);
     }
 
-    public function staffroles()
+    public function roles()
     {
-        return $this->hasMany(Staffrole::class);
+        return $this->belongsToMany(Role::class);
     }
 
     public function levels()

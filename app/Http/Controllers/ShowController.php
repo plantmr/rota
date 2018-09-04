@@ -9,6 +9,7 @@ use Rota\Models\Week;
 use Rota\Models\Day;
 use Rota\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class ShowController extends Controller
 {
@@ -120,10 +121,24 @@ class ShowController extends Controller
             'next' => $request->weekno +1,
             'noweeks' => $noweeks,
             'weeknumber' => $request->weekno 
-        ]);
-
-        
+        ]);     
     }
 
+    public function thisWeek(Week $week)
+    {
+        // Get todays date
+        $dt = Carbon::now();
+        $todaydate = $dt->toDateString();
 
+        /////////////////////////////////
+        //// TEMP DATE FOR TESTING //////
+        /////////////////////////////////
+        $todaydate = "2018-08-10";
+
+        // Get week number
+        $weekdata = $week::where('start_date', '<=', $todaydate)->where('end_date', '>=', $todaydate)->get()->first(); 
+        
+        return redirect()->route('show', [$weekdata->week_no]);
+
+    }
 }
