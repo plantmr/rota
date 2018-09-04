@@ -63,6 +63,10 @@ class ChangeController extends Controller
 
     public function requestForm(Request $request, Item $item)
     {
-        dd($request->persons);
+        dd($request->all());
+
+        // Emails
+    
+
     }
 }
