@@ -33,7 +33,7 @@
 		</div>
 	</div>	
 		<div class="daybox col-sm-8">
-		<form>
+		<form action="{{ url('change/request/form') }}" method="post">
 			<p>Request to:</p>
 			<div class="form-check col-sm-5">
 			    <input type="radio" class="form-check-input" name="request" val="swap"  
@@ -115,6 +115,7 @@
 		  	</div>
 		 
 		  <button type="submit" class="btn btn-primary">Request</button>
+		  @csrf
 		  
 		</form>
 		
