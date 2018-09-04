@@ -77,6 +77,8 @@
 						@endif					 
 			    	</select>
 			  	</div>
+			@else
+				<input type="hidden" value="{{ $items->persons_id }}" name="swapthis">
 		  	@endif
 
 		  	<div class="form-group col-sm-5" id="starttime">
