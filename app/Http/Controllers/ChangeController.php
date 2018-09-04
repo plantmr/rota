@@ -60,4 +60,9 @@ class ChangeController extends Controller
             'items' => $itemdetails
         ]);
     }
+
+    public function requestForm(Request $request, Item $item)
+    {
+        dd($request->persons);
+    }
 }
