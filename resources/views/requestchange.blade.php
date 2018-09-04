@@ -36,7 +36,12 @@
 		<form action="{{ url('change/request/form') }}" method="post">
 			<p>Request to:</p>
 			<div class="form-check col-sm-5">
-			    <input type="radio" class="form-check-input" name="request" val="swap"  
+			    <input type="radio" class="form-check-input" name="request" value="@if(Auth::user()->id == $items->persons->id)
+			    	swap 
+			    @else
+			    	swapthis 
+			    @endif
+			    "  swap"  
 			    @if(Auth::user()->id != $items->persons->id)
 			    	checked="checked"
 			    @else
@@ -53,11 +58,11 @@
 			</div>
 			 @if(Auth::user()->id == $items->persons->id)
 				<div class="form-check col-sm-5">
-				    <input type="radio" class="form-check-input" name="request" val="cancel" onclick="cancelshift()">
+				    <input type="radio" class="form-check-input" name="request" value="cancel" onclick="cancelshift()">
 				    <label class="form-check-label" for="cancel">Cancel the shift</label>
 				</div>
 				<div class="form-check col-sm-5">
-				    <input type="radio" class="form-check-input" name="request" val="times" onclick="clicktime()">
+				    <input type="radio" class="form-check-input" name="request" value="times" onclick="clicktime()">
 				    <label class="form-check-label" for="times">Change the times</label>
 				</div>
 			@endif
