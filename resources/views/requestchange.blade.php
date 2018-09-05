@@ -24,12 +24,15 @@
 </script>
 	<div class="daybox col-sm-8">
 		<h1>Change Request</h1>
-		<div class="weekrow">				
+		<div class="weekrow"><h3>{{ \Carbon\Carbon::parse($items->days->date)->format('l d F Y') }}</h3></div>	
+		<div class="weekrow">	
+			<h5>			
 			<div class="arow">{{ $items->roles->role }}</div>
 			<div class="brow">{{ $items->persons->first_name }} <span class="mobile">{{ $items->persons->last_name }}</span></div>
 			{{-- <div class="arow">{{ $tm->persons->last_name }}</div> --}}
 			<div class="arow">{{ \Carbon\Carbon::parse($items->start_time)->format('H:s') }}</div>
 			<div class="arow">{{ \Carbon\Carbon::parse($items->finish_time)->format('H:s') }}</div>
+			</h5>
 		</div>
 	</div>	
 		<div class="daybox col-sm-8">
