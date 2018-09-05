@@ -1,7 +1,12 @@
 <div class="daybox col-sm-12">
 	<div class="navdiv">
+		<div>
+			{{ $noweeks[0]->year }}
+		</div>
 		<div class="leftarrow">
-			<a href="{{ url('myrota/' . $prev) }}"><span  class="fas fa-caret-left"></span> Prev</a>
+			<a href="{{ url('myrota/' . $prev) }}" @if($prev == 0)
+				 class="disabled"
+				 @endif><span  class="fas fa-caret-left"></span> Prev</a>
 		</div>
 
 		<div class="centerdropdown">
@@ -10,7 +15,7 @@
 					<label for="weekno">Week no: </label>
 					<select name="weekno" id="weekno" onchange="document.getElementById('weeksub').submit();">
 						@foreach ($noweeks as $wekno)
-							<option val="{{ $wekno->week_no }}" @if ($weeknumber == $wekno->week_no)
+							<option value="{{ $wekno->id }}" @if ($weeknumber == $wekno->week_no)
 								selected="selected" 
 							@endif >{{ $wekno->week_no }}</option>
 						@endforeach	
