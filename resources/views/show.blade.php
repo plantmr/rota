@@ -9,7 +9,11 @@
 			<div class="col-sm-12">
 				@if($items)
 					@foreach ($items as $item)				
-						<div class="hrow">{{ \Carbon\Carbon::parse($item[0]->days->date)->format('l d F Y') }}</div>
+						<div class="hrow">
+							@if(isset($item[0]))
+								{{ \Carbon\Carbon::parse($item[0]->days->date)->format('l d F Y') }}
+							@endif
+						</div>
 						@foreach ($item as $tm)	
 							<div class="weekrow link" onclick="window.location='{!! url('change/' . $tm->id); !!}'">				
 								<div class="arow">{{ $tm->roles->role }}</div>
