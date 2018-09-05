@@ -30,7 +30,7 @@
 		</div>
 	</div>
 	<div class="navdiv">
-		<input type="radio" name="rota" aria-label="My rota" onclick="window.location.href='{!! url('myrota/' . $weeknumber); !!}'" checked="checked"> My rota
-		<input type="radio" name="rota" aria-label="Weekly rota" onclick="window.location.href='{!! url('show/' . $weeknumber); !!}'"> Weekly rota
+		<input type="radio" name="rota" aria-label="My rota" onclick="window.location.href='{!! url('myrota/' . $weekid); !!}'" checked="checked"> My rota
+		<input type="radio" name="rota" aria-label="Weekly rota" onclick="window.location.href='{!! url('show/' . $weekid); !!}'"> Weekly rota
 	</div>
 </div>
