@@ -24,10 +24,10 @@ class ShowController extends Controller
     {
         // Get range of days in week
         $weekrange = $week::where('id', $wkno)->get()->first();
-
+// dd($weekrange);
         // Get days in week
         $days = $day::where('date', '>=', $weekrange->start_date)->where('date', '<=', $weekrange->end_date)->get();  
-        
+// dd($days);        
         // Get data for each day
         foreach ($days as $day) 
         {
@@ -35,16 +35,15 @@ class ShowController extends Controller
         }
 
         // Get number of weeks in year (possible 53 weeks in leap year)
-        $noweeks = $week::where('year', date('Y'))->get();
-        
+        $noweeks = $week::where('year', $weekrange->year)->get();
+      
         return view('show')->with([
     		'items' => $itemarray,
-    		// 'persons' => $persons,
             'day' =>  $itemarray[0],
             'prev' => $wkno - 1,
             'next' => $wkno +1,
             'noweeks' => $noweeks,
-            'weeknumber' => $wkno
+            'weeknumber' => $weekrange->week_no
     	]);
     }
 
@@ -69,7 +68,7 @@ class ShowController extends Controller
         }
 
         // Get number of weeks in year (possible 53 weeks in leap year)
-        $noweeks = $week::where('year', date('Y'))->get();
+        $noweeks = $week::where('year', $weekrange->year)->get();
         
         return view('show')->with([
             'items' => $itemarray,
@@ -78,7 +77,7 @@ class ShowController extends Controller
             'prev' => $request->weekno - 1,
             'next' => $request->weekno +1,
             'noweeks' => $noweeks,
-            'weeknumber' => $request->weekno 
+            'weeknumber' => $weekrange->week_no 
         ]);
     }
 
@@ -87,19 +86,20 @@ class ShowController extends Controller
         // Get persons id of user
         $person_id = $person::where('user_id', Auth::user()->id)->get()->first();
 
-        // Get items form week for auth id
+        // Get range of days in week
+        $weekrange = $week::where('id', $id)->get()->first();
      
         $items = $item::where('persons_id', $person_id->id)->where('weeks_id', $id)->get();
 
         // Get number of weeks in year (possible 53 weeks in leap year)
-        $noweeks = $week::where('year', date('Y'))->get();
-       
+        $noweeks = $week::where('year', $weekrange->year)->get();
+  
         return view('myrota')->with([
             'items' => $items,
             'prev' => $id - 1,
             'next' => $id +1,
             'noweeks' => $noweeks,
-            'weeknumber' => $id 
+            'weeknumber' => $weekrange->week_no 
         ]);
     }
 
@@ -108,19 +108,20 @@ class ShowController extends Controller
         // Get persons id of user
         $person_id = $person::where('user_id', Auth::user()->id)->get()->first();
 
-        // Get items form week for auth id
+         // Get range of days in week
+        $weekrange = $week::where('id', $request->weekno)->get()->first();
      
         $items = $item::where('persons_id', $person_id->id)->where('weeks_id', $request->weekno)->get();
 
         // Get number of weeks in year (possible 53 weeks in leap year)
-        $noweeks = $week::where('year', date('Y'))->get();
+        $noweeks = $week::where('year', $weekrange->year)->get();
        
         return view('myrota')->with([
             'items' => $items,
             'prev' => $request->weekno - 1,
             'next' => $request->weekno +1,
             'noweeks' => $noweeks,
-            'weeknumber' => $request->weekno 
+            'weeknumber' => $weekrange->week_no 
         ]);     
     }
 
@@ -129,11 +130,6 @@ class ShowController extends Controller
         // Get todays date
         $dt = Carbon::now();
         $todaydate = $dt->toDateString();
-
-        /////////////////////////////////
-        //// TEMP DATE FOR TESTING //////
-        /////////////////////////////////
-        $todaydate = "2018-08-10";
 
         // Get week number
         $weekdata = $week::where('start_date', '<=', $todaydate)->where('end_date', '>=', $todaydate)->get()->first(); 
