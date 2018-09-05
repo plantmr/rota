@@ -43,7 +43,8 @@ class ShowController extends Controller
             'prev' => $wkno - 1,
             'next' => $wkno +1,
             'noweeks' => $noweeks,
-            'weeknumber' => $weekrange->week_no
+            'weeknumber' => $weekrange->week_no,
+            'weekid' => $wkno
     	]);
     }
 
@@ -77,7 +78,8 @@ class ShowController extends Controller
             'prev' => $request->weekno - 1,
             'next' => $request->weekno +1,
             'noweeks' => $noweeks,
-            'weeknumber' => $weekrange->week_no 
+            'weeknumber' => $weekrange->week_no,
+            'weekid' => $request->weekno
         ]);
     }
 
@@ -99,7 +101,8 @@ class ShowController extends Controller
             'prev' => $id - 1,
             'next' => $id +1,
             'noweeks' => $noweeks,
-            'weeknumber' => $weekrange->week_no 
+            'weeknumber' => $weekrange->week_no,
+            'weekid' => $id 
         ]);
     }
 
@@ -121,7 +124,8 @@ class ShowController extends Controller
             'prev' => $request->weekno - 1,
             'next' => $request->weekno +1,
             'noweeks' => $noweeks,
-            'weeknumber' => $weekrange->week_no 
+            'weeknumber' => $weekrange->week_no,
+            'weekid' => $request->weekno
         ]);     
     }
 
