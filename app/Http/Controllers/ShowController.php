@@ -24,10 +24,10 @@ class ShowController extends Controller
     {
         // Get range of days in week
         $weekrange = $week::where('id', $wkno)->get()->first();
-// dd($weekrange);
+
         // Get days in week
         $days = $day::where('date', '>=', $weekrange->start_date)->where('date', '<=', $weekrange->end_date)->get();  
-// dd($days);        
+    
         // Get data for each day
         foreach ($days as $day) 
         {
@@ -91,6 +91,7 @@ class ShowController extends Controller
         // Get range of days in week
         $weekrange = $week::where('id', $id)->get()->first();
      
+        // Get items
         $items = $item::where('persons_id', $person_id->id)->where('weeks_id', $id)->get();
 
         // Get number of weeks in year (possible 53 weeks in leap year)
@@ -114,6 +115,7 @@ class ShowController extends Controller
          // Get range of days in week
         $weekrange = $week::where('id', $request->weekno)->get()->first();
      
+        // Get items
         $items = $item::where('persons_id', $person_id->id)->where('weeks_id', $request->weekno)->get();
 
         // Get number of weeks in year (possible 53 weeks in leap year)
