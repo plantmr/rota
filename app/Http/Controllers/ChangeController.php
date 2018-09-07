@@ -8,8 +8,8 @@ use Rota\Models\Role;
 use Rota\Models\Item;
 use Rota\Models\Week;
 use Rota\Mail\AdminEmailRequest;
+use Rota\Mail\SwapEmailRequest;
 use Illuminate\Support\Facades\Auth;
-
 use Illuminate\Support\Facades\Mail;
 
 class ChangeController extends Controller
@@ -84,8 +84,8 @@ class ChangeController extends Controller
              Mail::to('admin@test.com')->send(new AdminEmailRequest($requests));
 
             // Send email to person requested to swap
-             // Mail::to(Auth::user())->send(new AdminEmailRequest($item));
-             // 
+             Mail::to($requested->email)->send(new SwapEmailRequest($requests));
+             
              return view('requestedswap')->with([
             'requests' => $requests
         ]);
