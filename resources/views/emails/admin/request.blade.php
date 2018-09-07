@@ -6,13 +6,5 @@
 
 on {{ \Carbon\Carbon::parse($requests[2]->days->date)->format('l d F Y') }}
 
-@component('mail::button', ['url' => ''])
-Approve
-@endcomponent
-
-@component('mail::button', ['url' => ''])
-Decline
-@endcomponent
-
 Rota Administration
 @endcomponent
