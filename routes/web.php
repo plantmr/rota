@@ -44,6 +44,24 @@ Route::get('/weekadmin', 'AdminController@index')->name('admin');
 /* 
  * Seeders
  */
+Route::get('/seedrequesttypes', function(\Rota\Models\RequestType $requesttype){
+
+	$types = [
+		'swap',
+		'swapthis',
+		'cancel',
+		'time'
+	];
+
+	foreach ($types as $type) 
+	{
+		$requesttype->create([
+		'type' => $type    		
+		]);
+	}
+});
+
+
 Route::get('/seeddays', function(\Rota\Models\Day $day){
 
 	$year = 2025;
