@@ -8,7 +8,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class AdminEmailRequest extends Mailable
+class SwapEmailRequest extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -19,7 +19,6 @@ class AdminEmailRequest extends Mailable
      */
     
     public $requests;
-    public $token;
 
     public function __construct($requests)
     {
@@ -33,6 +32,6 @@ class AdminEmailRequest extends Mailable
      */
     public function build()
     {
-        return $this->subject('Rota Administration: Request to swap item')->markdown('emails.admin.request');
+        return $this->subject('Rota request to swap item')->markdown('emails.admin.swap');
     }
 }

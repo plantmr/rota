@@ -15,7 +15,9 @@ Route::get('/changepasswordshow','HomeController@showChangePasswordForm')->name(
 Route::post('/changepasswordshow','HomeController@showChangePasswordForm')->name('changepasspage');
 Route::post('/changepassword','HomeController@changePassword')->name('changepassword');
 
-
+// Email routes
+Route::get('/swap/agree','Email\EmailController@swapagree')->name('swap.agree');
+Route::get('/swap/decline','Email\EmailController@swapdecline')->name('swap.decline');
 
 Route::get('/home', 'HomeController@index')->name('home');
 

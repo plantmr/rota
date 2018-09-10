@@ -7,18 +7,24 @@ use Rota\Models\Person;
 use Rota\Models\Role;
 use Rota\Models\Item;
 use Rota\Models\Week;
+use Rota\Models\RequestType;
+use Rota\Models\ChangeRequest;
 use Rota\Mail\AdminEmailRequest;
 use Rota\Mail\SwapEmailRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Rota\Models\User;
+use Carbon\Carbon;
 
 class ChangeController extends Controller
 {
     protected $itemarray = [];
     protected $timeloop = [];
+    public $user;
 
-    public function __construct()
+    public function __construct(User $user)
     {
+        $this->user = $user;
         $this->middleware('auth');
     }
 
@@ -50,8 +56,6 @@ class ChangeController extends Controller
 
     public function request(Request $request, Person $person, Role $role, Item $item, Week $week, Day $day)
     {
-        
-
         // Get item details
         $itemdetails = $item::where('id', $id)->get()->first();
 
@@ -64,7 +68,7 @@ class ChangeController extends Controller
         ]);
     }
 
-    public function requestForm(Request $request, Item $item, Person $person)
+    public function requestForm(Request $request, Item $item, Person $person, User $user, RequestType $requesttype, ChangeRequest $changerequest)
     {    
         // Get item info
         $iteminfo = $item::where('id', $request->itemid)->get()->first();
@@ -72,23 +76,42 @@ class ChangeController extends Controller
         // Request to swap shift with another qualified person
         if($request->requested == 'swap')
         {
-            // Get names of requestor and requested
-            $requestor = $person::where('id', Auth::user()->id)->get()->first();
-            $requested = $person::where('id', $request->persons)->get()->first();
-            $requests = [$requestor, $requested, $iteminfo];
+            // Input to request table
+            $inputchange = new ChangeRequest;
+
+            // Check if already in database
+            $checkdata = $inputchange::where('item_id', $request->itemid)->where('request_type_id', 1)->where('request_person_id', Auth::user()->id)->where('subject_person_id', $request->persons)->get()->first();
+            
+            if($checkdata !== null)
+            {
+                 return view('datasent');
+            }
+
+            // Else save in database
+            $inputchange->request_type_id = 1;
+            $inputchange->request_person_id = Auth::user()->id;
+            $inputchange->subject_person_id = $request->persons;
+            $inputchange->item_id = $request->itemid;
+            $inputchange->date_originated = Carbon::now()->toDateString();
+
+            $inputchange->save();
 
             // Record request in database
-           
+            $requestor = $person::where('id', Auth::user()->id)->get()->first();
+            $requested = $person::where('id', $request->persons)->get()->first();
+            $act_token = Auth::user()->activation_token;
+            $requests = [$requestor, $requested, $iteminfo, $act_token];
 
             // Send email to admin
              Mail::to('admin@test.com')->send(new AdminEmailRequest($requests));
 
             // Send email to person requested to swap
+             // Mail::to($requested->email)->send(new SwapEmailRequest($requests));
              Mail::to($requested->email)->send(new SwapEmailRequest($requests));
              
              return view('requestedswap')->with([
             'requests' => $requests
-        ]);
+            ]);
         }
         
         // Request to swap another users shift 
