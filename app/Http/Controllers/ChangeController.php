@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Rota\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Hash;
 
 class ChangeController extends Controller
 {
@@ -72,7 +73,6 @@ class ChangeController extends Controller
     {    
         // Get item info
         $iteminfo = $item::where('id', $request->itemid)->get()->first();
-
         // Request to swap shift with another qualified person
         if($request->requested == 'swap')
         {
@@ -81,20 +81,36 @@ class ChangeController extends Controller
 
             // Check if already in database
             $checkdata = $inputchange::where('item_id', $request->itemid)->where('request_type_id', 1)->where('request_person_id', Auth::user()->id)->where('subject_person_id', $request->persons)->get()->first();
-            
+           
             if($checkdata !== null)
             {
                  return view('datasent');
             }
 
+            // Check if request already for this item
+            $checkrequest = $inputchange::where('item_id', $request->itemid)->get();
+            foreach($checkrequest as $check)
+            {
+                if($check !== null && $check->resolution === null)
+                {
+                    return view('itemalreadyrequested');
+                }
+            }
+                
             // Else save in database
             $inputchange->request_type_id = 1;
             $inputchange->request_person_id = Auth::user()->id;
             $inputchange->subject_person_id = $request->persons;
             $inputchange->item_id = $request->itemid;
             $inputchange->date_originated = Carbon::now()->toDateString();
-
             $inputchange->save();
+
+            // Create new auth token for user
+            $user = User::where('id', Auth::user()->id)->get()->first();
+
+            $user->activation_token = Hash::make(uniqid());
+            // dd($user->activation_token);
+            $user->save();
 
             // Record request in database
             $requestor = $person::where('id', Auth::user()->id)->get()->first();

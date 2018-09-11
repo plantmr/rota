@@ -9,11 +9,13 @@ class EmailController extends Controller
 {
     public function swapagree(Request $request)
     {
-    	dd($request->act_token);
+    	$request->act_token;
+    	$request->id;
     }
 
     public function swapdecline(Request $request)
     {
-    	dd($request->act_token);
+    	$request->act_token;
+    	$request->id;
     }
 }

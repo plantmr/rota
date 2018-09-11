@@ -39,6 +39,6 @@ class WeekController extends Controller
 	        $current = strtotime('+1 day', $current);
 	    }
 
-        dd(dates);
+ 
     }
 }

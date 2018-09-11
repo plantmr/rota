@@ -7,13 +7,15 @@
 on {{ \Carbon\Carbon::parse($requests[2]->days->date)->format('l d F Y') }}
 
 @component('mail::button', ['url' => route('swap.agree',[
-		'act_token' => $requests[3]
+		'act_token' => $requests[3],
+		'id' =>  $requests[2]->id
 	])])
 Agree
 @endcomponent
 
 @component('mail::button', ['url' => route('swap.decline',[
 		'act_token' => $requests[3],
+		'id' =>  $requests[2]->id
 		
 	])])
 Decline
