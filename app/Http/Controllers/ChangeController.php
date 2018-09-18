@@ -36,19 +36,17 @@ class ChangeController extends Controller
 
         // Get persons with role
         $roledetails = $role::where('id', $item->roles_id)->get()->first();
-// dd($roledetails);
+
         // Get persons details
         $persons_details = $person::where('id', $item->persons_id)->get()->first();
 
         $personsdetail = $person::where('id', Auth::user()->id )->get()->first();
 
-
-// dd($persons_details);
         // Check if user is qualified to swap
        
         if(Auth::user()->id != $item->persons_id)
         {
-             $checkid = false;
+            $checkid = false;
             if($personsdetail->roles->count())
             {
                 foreach($personsdetail->roles as $role)
@@ -64,8 +62,6 @@ class ChangeController extends Controller
             {
                 return view('notqualified');
             }
-            // var_dump($checkid);
-
         }
         
 
@@ -106,31 +102,32 @@ class ChangeController extends Controller
     {    
         // Get item info
         $iteminfo = $item::where('id', $request->itemid)->get()->first();
+
+         // Input to request table
+        $inputchange = new ChangeRequest;
+
+        // Check if already in database
+        $checkdata = $inputchange::where('item_id', $request->itemid)->where('request_type_id', 1)->where('request_person_id', Auth::user()->id)->where('subject_person_id', $request->persons)->get()->first();
+       
+        if($checkdata !== null)
+        {
+             return view('datasent');
+        }
+
+        // Check if request already for this item
+        $checkrequest = $inputchange::where('item_id', $request->itemid)->get();
+        foreach($checkrequest as $check)
+        {
+            if($check !== null && $check->resolution === null)
+            {
+                return view('itemalreadyrequested');
+            }
+        }
+
         // Request to swap shift with another qualified person
         if($request->requested == 'swap')
-        {
-            // Input to request table
-            $inputchange = new ChangeRequest;
-
-            // Check if already in database
-            $checkdata = $inputchange::where('item_id', $request->itemid)->where('request_type_id', 1)->where('request_person_id', Auth::user()->id)->where('subject_person_id', $request->persons)->get()->first();
-           
-            if($checkdata !== null)
-            {
-                 return view('datasent');
-            }
-
-            // Check if request already for this item
-            $checkrequest = $inputchange::where('item_id', $request->itemid)->get();
-            foreach($checkrequest as $check)
-            {
-                if($check !== null && $check->resolution === null)
-                {
-                    return view('itemalreadyrequested');
-                }
-            }
-                
-            // Else save in database
+        {    
+            // Save in database
             $inputchange->request_type_id = 1;
             $inputchange->request_person_id = Auth::user()->id;
             $inputchange->subject_person_id = $request->persons;
@@ -149,7 +146,8 @@ class ChangeController extends Controller
             $requestor = $person::where('id', Auth::user()->id)->get()->first();
             $requested = $person::where('id', $request->persons)->get()->first();
             $act_token = Auth::user()->activation_token;
-            $requests = [$requestor, $requested, $iteminfo, $act_token];
+            $type = 1;
+            $requests = [$requestor, $requested, $iteminfo, $act_token, $type];
 
             // Send email to admin
              Mail::to('admin@test.com')->send(new AdminEmailRequest($requests));
@@ -166,17 +164,38 @@ class ChangeController extends Controller
         // Request to swap another users shift 
         if($request->requested == 'swapthis')
         {
-                       
-           // Check if qualified to swap
-           
+            // Save in database
+            $inputchange->request_type_id = 2;
+            $inputchange->request_person_id = Auth::user()->id;
+            $inputchange->subject_person_id = $request->swapthis;
+            $inputchange->item_id = $request->itemid;
+            $inputchange->date_originated = Carbon::now()->toDateString();
+            $inputchange->save();
+
+            // Create new auth token for user
+            $user = User::where('id', Auth::user()->id)->get()->first();
+
+            $user->activation_token = Hash::make(uniqid());
+            // dd($user->activation_token);
+            $user->save();
 
             // Record request in database
-            
+            $requestor = $person::where('id', Auth::user()->id)->get()->first();
+            $requested = $person::where('id', $request->swapthis)->get()->first();
+            $act_token = Auth::user()->activation_token;
+            $type = 2;
+            $requests = [$requestor, $requested, $iteminfo, $act_token, $type];
 
             // Send email to admin
-            
+             Mail::to('admin@test.com')->send(new AdminEmailRequest($requests));
 
             // Send email to person requested to swap
+             // Mail::to($requested->email)->send(new SwapEmailRequest($requests));
+             Mail::to($requested->email)->send(new SwapEmailRequest($requests));
+             
+             return view('requestedswap')->with([
+            'requests' => $requests
+            ]);
             
         }
         
