@@ -35,7 +35,39 @@ class ChangeController extends Controller
         $role_id = $item->roles_id;
 
         // Get persons with role
-         $roledetails = $role::where('id', $item->roles_id)->get()->first();
+        $roledetails = $role::where('id', $item->roles_id)->get()->first();
+// dd($roledetails);
+        // Get persons details
+        $persons_details = $person::where('id', $item->persons_id)->get()->first();
+
+        $personsdetail = $person::where('id', Auth::user()->id )->get()->first();
+
+
+// dd($persons_details);
+        // Check if user is qualified to swap
+       
+        if(Auth::user()->id != $item->persons_id)
+        {
+             $checkid = false;
+            if($personsdetail->roles->count())
+            {
+                foreach($personsdetail->roles as $role)
+                {
+                    // echo $role->id . ' - ' . $role_id . '<br>';
+                    if($role->id == $role_id)
+                    {
+                        $checkid = true;
+                    }
+                }                        
+            }
+            if($checkid === false)
+            {
+                return view('notqualified');
+            }
+            // var_dump($checkid);
+
+        }
+        
 
         // Values for 24hr dropdowns
         $tStart = strtotime("06:00");
@@ -47,10 +79,11 @@ class ChangeController extends Controller
           $timeloop[] = date("H:i",$tNow);
           $tNow = strtotime('+15 minutes',$tNow);
         }
-        
+
         return view('requestchange')->with([
     		'items' => $item,
             'role' => $roledetails,
+            'person' => $persons_details,
             'hours' => $timeloop
     	]);
     }
@@ -60,7 +93,7 @@ class ChangeController extends Controller
         // Get item details
         $itemdetails = $item::where('id', $id)->get()->first();
 
-        // dd($itemdetails->persons->id);
+        // Check if person is qualified to swap
 
         // Get persons available for this item
         
@@ -133,6 +166,10 @@ class ChangeController extends Controller
         // Request to swap another users shift 
         if($request->requested == 'swapthis')
         {
+                       
+           // Check if qualified to swap
+           
+
             // Record request in database
             
 
