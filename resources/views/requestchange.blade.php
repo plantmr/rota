@@ -21,6 +21,10 @@
 		document.getElementById('starttime').style.display='none';
 		document.getElementById('endtime').style.display='none';
 	}
+
+	function goBack() {
+    window.history.go(-1);
+}
 </script>
 <div class="daybox col-sm-8">
 	<h1>Change Request</h1>
@@ -39,12 +43,14 @@
 	<form action="{{ url('change/request/form') }}" method="post">
 		<p>Request to:</p>
 		<div class="form-check col-sm-5">
-			<input type="radio" class="form-check-input" name="requested" value="@if(Auth::user()->id == $items->persons->id)
-			swap 
+
+
+
+			<input type="radio" class="form-check-input" name="requested" value=@if(Auth::user()->id == $items->persons->id)
+			"swap"
 			@else
-			swapthis 
+			"swapthis" 
 			@endif
-			"  swap"  
 			@if(Auth::user()->id != $items->persons->id)
 			checked="checked"
 			@else
@@ -123,6 +129,7 @@
 				</div>
 				<input type="hidden" value="{{ $items->id }}" name="itemid">
 				<button type="submit" class="btn btn-primary">Request</button>
+				<button type="button" class="btn btn-primary" onclick="goBack()">Cancel</button>
 				@csrf
 
 			</form>
