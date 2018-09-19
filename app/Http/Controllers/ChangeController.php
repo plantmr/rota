@@ -10,6 +10,8 @@ use Rota\Models\Week;
 use Rota\Models\RequestType;
 use Rota\Models\ChangeRequest;
 use Rota\Mail\AdminEmailRequest;
+use Rota\Mail\AdminEmailCancelRequest;
+use Rota\Mail\AdminEmailTimeRequest;
 use Rota\Mail\SwapEmailRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -133,6 +135,7 @@ class ChangeController extends Controller
             $inputchange->subject_person_id = $request->persons;
             $inputchange->item_id = $request->itemid;
             $inputchange->date_originated = Carbon::now()->toDateString();
+            $inputchange->notes = $request->notes;
             $inputchange->save();
 
             // Create new auth token for user
@@ -142,12 +145,12 @@ class ChangeController extends Controller
             // dd($user->activation_token);
             $user->save();
 
-            // Record request in database
+            // Send record info to email
             $requestor = $person::where('id', Auth::user()->id)->get()->first();
             $requested = $person::where('id', $request->persons)->get()->first();
             $act_token = Auth::user()->activation_token;
             $type = 1;
-            $requests = [$requestor, $requested, $iteminfo, $act_token, $type];
+            $requests = [$requestor, $requested, $iteminfo, $act_token, $type, $request->notes];
 
             // Send email to admin
              Mail::to('admin@test.com')->send(new AdminEmailRequest($requests));
@@ -170,6 +173,7 @@ class ChangeController extends Controller
             $inputchange->subject_person_id = $request->swapthis;
             $inputchange->item_id = $request->itemid;
             $inputchange->date_originated = Carbon::now()->toDateString();
+            $inputchange->notes = $request->notes;
             $inputchange->save();
 
             // Create new auth token for user
@@ -179,19 +183,18 @@ class ChangeController extends Controller
             // dd($user->activation_token);
             $user->save();
 
-            // Record request in database
+            // Send record info to email
             $requestor = $person::where('id', Auth::user()->id)->get()->first();
             $requested = $person::where('id', $request->swapthis)->get()->first();
             $act_token = Auth::user()->activation_token;
             $type = 2;
-            $requests = [$requestor, $requested, $iteminfo, $act_token, $type];
+            $requests = [$requestor, $requested, $iteminfo, $act_token, $type, $request->notes];
 
             // Send email to admin
-             Mail::to('admin@test.com')->send(new AdminEmailRequest($requests));
+            Mail::to('admin@test.com')->send(new AdminEmailRequest($requests));
 
             // Send email to person requested to swap
-             // Mail::to($requested->email)->send(new SwapEmailRequest($requests));
-             Mail::to($requested->email)->send(new SwapEmailRequest($requests));
+            Mail::to($requested->email)->send(new SwapEmailRequest($requests));
              
              return view('requestedswap')->with([
             'requests' => $requests
@@ -203,19 +206,55 @@ class ChangeController extends Controller
         if($request->requested == 'cancel')
         {
             // Record request in database
-            
+            $inputchange->request_type_id = 3;
+            $inputchange->request_person_id = Auth::user()->id;
+            $inputchange->cancel = 1;
+            $inputchange->item_id = $request->itemid;
+            $inputchange->date_originated = Carbon::now()->toDateString();
+            $inputchange->notes = $request->notes;
+            $inputchange->save();
+
+            // Send record info to email
+            $requestor = $person::where('id', Auth::user()->id)->get()->first();
+            $requested = $person::where('id', $request->swapthis)->get()->first();
+            $act_token = Auth::user()->activation_token;
+            $type = 3;
+            $requests = [$requestor, $requested, $iteminfo, $act_token, $type, $request->notes];
 
             // Send email to admin
-            
+            Mail::to('admin@test.com')->send(new AdminEmailCancelRequest($requests));
+
+             return view('requestedcancel')->with([
+            'requests' => $requests
+            ]);   
         }
 
         // Request to change times of a shift
-        if($request->requested == 'time')
+        if($request->requested == 'times')
         {
             // Record request in database
-            
+            $inputchange->request_type_id = 4;
+            $inputchange->request_person_id = Auth::user()->id;
+            $inputchange->start_time = $request->start;
+            $inputchange->stop_time = $request->end;
+            $inputchange->item_id = $request->itemid;
+            $inputchange->date_originated = Carbon::now()->toDateString();
+            $inputchange->notes = $request->notes;
+            $inputchange->save();
+
+            // Send record info to email
+            $requestor = $person::where('id', Auth::user()->id)->get()->first();
+            $requested = $person::where('id', $request->swapthis)->get()->first();
+            $act_token = Auth::user()->activation_token;
+            $type = 3;
+            $requests = [$requestor, $requested, $iteminfo, $act_token, $type, $request->notes, $request->start, $request->end];
 
             // Send email to admin
+            Mail::to('admin@test.com')->send(new AdminEmailTimeRequest($requests));
+
+             return view('requestedtime')->with([
+            'requests' => $requests
+            ]);   
             
         }
 
