@@ -1,8 +1,8 @@
-#rota
+# rota
 
 Laravel application to manage rotas. 
 
-##Install
+## Install
 
 Download application
 
